@@ -1,5 +1,5 @@
-/*Lia Fernanda Pardo Mireles 2096765â€‹ 
- * Alejandro Quintanilla Leal 2010568â€‹
+/*Lia Fernanda Pardo Mireles 2096765 
+ * Alejandro Quintanilla Leal 2010568
  * Angel Joseph Meraz Hernandez 2067151
  * Luis Fernando Segobia Torres 2177528
  * */
@@ -78,7 +78,7 @@ int mostrarMenu();
 int submenu_bajas(Lista &lista_alumnos_activos, Lista &lista_alumnos_inactivos, Pila &pila_alumnos_inactivos);
 void altaAlumnos(Lista &lista_activos);
 void mostrar(const Lista lista);
-
+int total_activos = 0;
 
 int main(){
 	int matricula = 0;
@@ -125,7 +125,7 @@ void insertarOrdenado(Lista &cabeza, Alumno* nuevo) {
         actual->next = nuevo;
     }
 }
-Lista buscarPorMatricula(Alumno* cabeza, int matricula) {
+Lista buscarPorMatricula(Lista cabeza, int matricula) {
     Alumno* actual = cabeza;
     while (actual != NULL) {
         if (actual->matricula == matricula)
@@ -134,7 +134,7 @@ Lista buscarPorMatricula(Alumno* cabeza, int matricula) {
     }
     return NULL;
 }
-Lista buscarPorNombre(Alumno* cabeza, const string& nombre) {
+Lista buscarPorNombre(Lista cabeza, const string& nombre) {
     Alumno* actual = cabeza;
     while (actual != NULL) {
         if (actual->nombre == nombre)
@@ -186,14 +186,14 @@ void bajaParcial(Lista &lista_alumnos_activos, Lista &lista_alumnos_inactivos, P
     if (opcion == 1) {
         int mat;
         cout << "Ingrese matrícula: ";
-        cin >> mat;
+        mat = leerValor<int>(0,9999999);
         encontrado = buscarPorMatricula(lista_alumnos_activos, mat);
     } 
 	else {
         string nombre;
         cout << "Ingrese nombre: ";
-        getline(cin, nombre);
-        getline(cin, nombre);
+        cin.ignore();
+        nombre = leerCadena();
         encontrado = buscarPorNombre(lista_alumnos_activos, nombre);
 	}
 
@@ -281,14 +281,13 @@ void bajaTotal(Lista &lista_alumnos_inactivos, Pila &pila_alumnos_inactivos) {
     if (opcion == 1) {
         int mat;
         cout << "Ingrese matrícula: ";
-        cin >> mat;
+        mat = leerValor<int>(0,999999);
         encontrado = buscarPorMatricula(lista_alumnos_inactivos, mat);
     } 
 	else{
         string nombre;
         cout << "Ingrese nombre: ";
-        getline(cin, nombre);
-        getline(cin, nombre);
+        nombre = leerCadena();
         encontrado = buscarPorNombre(lista_alumnos_inactivos, nombre);
 	}
 
@@ -382,8 +381,7 @@ void altaAlumnos(Lista &lista_activos) {
 
     cout << "\n--- Alta de Alumno ---\n";
     cout << "Matricula: ";
-    cin >> nuevo->matricula;
-    cin.ignore();
+    nuevo->matricula = leerValor<int>(0,99999999);
 
     // Validar si la matrícula ya existe
     Alumno* temp = lista_activos;
@@ -395,24 +393,24 @@ void altaAlumnos(Lista &lista_activos) {
         }
         temp = temp->next;
     }
-
+    cin.ignore();
     cout << "Nombre: ";
-    getline(cin, nuevo->nombre);
+    nuevo->nombre = leerCadena();
     cout << "Edad: ";
-    cin >> nuevo->edad;
+    nuevo->edad = leerValor<int>(1,100);
     cout << "Promedio: ";
-    cin >> nuevo->promedio;
+    nuevo->promedio = leerValor<float>(0,100.0);
     cin.ignore();
     cout << "Direccion: ";
-    getline(cin, nuevo->direccion);
+    nuevo->direccion = leerCadena();
     cout << "Telefono: ";
-    cin >> nuevo->telefono;
+    nuevo->telefono = leerValor<long long>(1000000000, 9999999999);
 
     nuevo->situacion = true; // Activo
     nuevo->next = NULL;
 
     insertarOrdenado(lista_activos, nuevo);
-
+    total_activos++;
     cout << "Alumno agregado exitosamente.\n";
     mostrar(lista_activos);
 	cout << "\n-------------------------------";
