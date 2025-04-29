@@ -78,6 +78,9 @@ int mostrarMenu();
 int submenu_bajas(Lista &lista_alumnos_activos, Lista &lista_alumnos_inactivos, Pila &pila_alumnos_inactivos);
 void altaAlumnos(Lista &lista_activos);
 void mostrar(const Lista lista);
+void submenuReportes(Lista &lista_alumnos_activos, Lista &lista_alumnos_inactivos);
+void mostrarPorcentajes(Lista &lista_alumnos_activos);
+void mostrarDatos(Lista &lista_alumnos_activos);
 int total_activos = 0;
 
 int main(){
@@ -95,7 +98,7 @@ int main(){
             case 1: altaAlumnos(lista_alumnos_activos); break;
             case 2: submenu_bajas(lista_alumnos_activos, lista_alumnos_inactivos, pila_alumnos_inactivos); break;
             case 3: break;
-            case 4: break;
+            case 4: submenuReportes(lista_alumnos_activos, lista_alumnos_inactivos); break;
             case 5: break;
             case 6: break;
             case 7: break;
@@ -437,4 +440,37 @@ void mostrar(const Lista lista){
 		aux = aux->next;
 	}
     cout << endl;
+}
+
+void submenuReportes(Lista &lista_alumnos_activos, Lista &lista_alumnos_inactivos){
+	int opcion;
+	do{
+		system("cls");	
+		cout << "\n***SUBMENU DE REPORTES***"<< endl;
+		cout << "\n**MENU**" << endl;
+    	cout << "1. Alumnos aprobados" << endl;
+    	cout << "2. Porcentajes" << endl;
+    	cout << "3. Datos generales" << endl;
+    	cout << "4. Alumnos inactivos" << endl;
+        cout << "5. Salir " << endl;
+    	cout << "Seleccione una opción: ";
+		opcion = leerValor<int>(1,5);
+		cout << opcion << " <-";
+		system("cls");	
+		switch (opcion) {
+            case 1: mostrar(lista_alumnos_activos); system("pause"); break;
+            case 2:	mostrarPorcentajes(lista_alumnos_activos); break;
+            case 3: mostrarDatos(lista_alumnos_activos); break;
+            case 4: mostrar(lista_alumnos_inactivos); system("pause"); break;
+            case 5: cout << "Volviendo al menu principal...\n"; break;
+        }
+	}while (opcion != 5);
+}
+
+void mostrarPorcentajes(Lista &lista_alumnos_activos) {
+
+}
+
+void mostrarDatos(Lista &lista_alumnos_activos) {
+
 }
