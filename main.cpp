@@ -81,6 +81,7 @@ void mostrar(const Lista lista);
 void submenuReportes(Lista &lista_alumnos_activos, Lista &lista_alumnos_inactivos);
 void mostrarPorcentajes(Lista &lista_alumnos_activos);
 void mostrarDatos(Lista &lista_alumnos_activos);
+void mostrarAprobados(Lista &lista_alumnos_activos);
 int total_activos = 0;
 
 int main(){
@@ -458,13 +459,29 @@ void submenuReportes(Lista &lista_alumnos_activos, Lista &lista_alumnos_inactivo
 		cout << opcion << " <-";
 		system("cls");	
 		switch (opcion) {
-            case 1: mostrar(lista_alumnos_activos); system("pause"); break;
+            case 1: mostrarAprobados(lista_alumnos_activos); system("pause"); break;
             case 2:	mostrarPorcentajes(lista_alumnos_activos); system("pause"); break;
             case 3: mostrarDatos(lista_alumnos_activos); break;
             case 4: mostrar(lista_alumnos_inactivos); system("pause"); break;
             case 5: cout << "Volviendo al menu principal...\n"; break;
         }
 	}while (opcion != 5);
+}
+
+void mostrarAprobados(Lista &lista_alumnos_activos) {
+    Alumno *aux = lista_alumnos_activos;
+    if(lista_alumnos_activos == NULL) {
+        cout << "No hay alumnos disponibles..." << endl;
+    }
+    while (aux != NULL) {
+        if(aux->promedio >= 70) {
+            cout << "\n-----------------------------------\n";
+		    cout << "Matricula: " << aux->matricula << endl
+			<< "Nombres: " << aux->nombre << endl
+			<< "Promedio: " << aux->promedio << endl;
+        }
+        aux = aux->next;
+    }
 }
 
 void mostrarPorcentajes(Lista &lista_alumnos_activos) { 
