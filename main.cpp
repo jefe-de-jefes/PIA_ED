@@ -459,7 +459,7 @@ void submenuReportes(Lista &lista_alumnos_activos, Lista &lista_alumnos_inactivo
 		system("cls");	
 		switch (opcion) {
             case 1: mostrar(lista_alumnos_activos); system("pause"); break;
-            case 2:	mostrarPorcentajes(lista_alumnos_activos); break;
+            case 2:	mostrarPorcentajes(lista_alumnos_activos); system("pause"); break;
             case 3: mostrarDatos(lista_alumnos_activos); break;
             case 4: mostrar(lista_alumnos_inactivos); system("pause"); break;
             case 5: cout << "Volviendo al menu principal...\n"; break;
@@ -467,8 +467,30 @@ void submenuReportes(Lista &lista_alumnos_activos, Lista &lista_alumnos_inactivo
 	}while (opcion != 5);
 }
 
-void mostrarPorcentajes(Lista &lista_alumnos_activos) {
+void mostrarPorcentajes(Lista &lista_alumnos_activos) { 
+    Alumno *aux = lista_alumnos_activos;
+    float n_aprobados = 0, n_reprobados = 0, n_total = 0;
+    float porcentaje_aprobados, porcentaje_reprobados;
+    if(lista_alumnos_activos == NULL) {
+        cout << "No hay alumnos disponibles..." << endl;
+    }
+	while(aux != NULL){
+        if(aux->promedio >= 70) {
+            n_aprobados++;
+        }
+        else {
+            n_reprobados++;
+        }
+        n_total++;
+		aux = aux->next;
+	}
 
+    porcentaje_aprobados = (n_aprobados/n_total) * 100;
+    porcentaje_reprobados = (n_reprobados/n_total) * 100;
+    
+
+    cout << "Porcentaje reprobados " << porcentaje_reprobados << "%" << endl;
+    cout << "Porcentaje aprobados " << porcentaje_aprobados << "%" << endl;
 }
 
 void mostrarDatos(Lista &lista_alumnos_activos) {
