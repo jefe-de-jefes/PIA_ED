@@ -55,20 +55,20 @@ struct Alumno {
     long long telefono;
     bool situacion; // true = activo, false = baja
     Alumno* next;
-   
+    Alumno* anterior;
 };
+
 typedef Alumno* Lista;
 typedef Alumno* Pila;
-struct Cola
-{
+struct Cola{
 	Alumno* first = NULL;
 	Alumno* last = NULL;
 };
 
 //Declaracion de las funciones
 void insertarOrdenado(Lista &cabeza, Alumno* nuevo);
-Lista buscarPorMatricula(Alumno* cabeza, int matricula);
-Lista buscarPorNombre(Alumno* cabeza, const string& nombre);
+Lista buscarPorMatricula(Alumno* cabeza, int matricula, Alumno* fin);
+Alumno* buscarPorNombre(Lista cabeza, const string& nombre);
 Lista eliminarDeLista(Lista &cabeza, int matricula);
 void bajaParcial(Lista &lista_alumnos_activos, Lista &lista_alumnos_inactivos, Pila &pila_alumnos_inactivos);
 void deshacerBaja(Lista &lista_alumnos_activos, Lista &lista_alumnos_inactivos, Pila &pila_alumnos_inactivos);
@@ -82,10 +82,10 @@ void submenuReportes(Lista &lista_alumnos_activos, Lista &lista_alumnos_inactivo
 void mostrarPorcentajes(Lista &lista_alumnos_activos);
 void mostrarDatos(Lista &lista_alumnos_activos);
 void mostrarAprobados(Lista &lista_alumnos_activos);
+Alumno* nodo_medio(Lista cabeza, Lista fin);
 int total_activos = 0;
 
 int main(){
-	int matricula = 0;
 	int op;
 	Lista lista_alumnos_activos = NULL;
 	Lista lista_alumnos_inactivos = NULL;
@@ -129,16 +129,22 @@ void insertarOrdenado(Lista &cabeza, Alumno* nuevo) {
         actual->next = nuevo;
     }
 }
-Lista buscarPorMatricula(Lista cabeza, int matricula) {
-    Alumno* actual = cabeza;
-    while (actual != NULL) {
-        if (actual->matricula == matricula)
-            return actual;
-        actual = actual->next;
+Alumno* buscarPorMatricula(Alumno* cabeza, int matricula, Alumno* fin) {
+    if(cabeza==fin || cabeza==NULL) return NULL;
+
+    Alumno* medio = nodo_medio(cabeza, fin);
+
+    if (medio->matricula == matricula) {
+        return medio;
     }
-    return NULL;
+
+    if (matricula < medio->matricula) {
+        return buscarPorMatricula(cabeza, matricula, medio);
+    }
+
+    return buscarPorMatricula(medio->next, matricula, fin);
 }
-Lista buscarPorNombre(Lista cabeza, const string& nombre) {
+Alumno* buscarPorNombre(Lista cabeza, const string& nombre) {
     Alumno* actual = cabeza;
     while (actual != NULL) {
         if (actual->nombre == nombre)
@@ -177,13 +183,9 @@ void bajaParcial(Lista &lista_alumnos_activos, Lista &lista_alumnos_inactivos, P
 	cout << "\n-------------------------------\n";
 	
 	int opcion;
-    do{
-    	cout << "Buscar por:\n1. Matrícula\n2. Nombre\nOpción: ";
-    	opcion = leerValor<int>(1,2);
-		cout << opcion << " <-";	
-    	if (opcion != 1 && opcion != 2)
-    		cout << "Opción inválida\n";
-	}while (opcion != 1 && opcion != 2);
+    cout << "Buscar por:\n1. Matrícula\n2. Nombre\nOpción: ";
+    opcion = leerValor<int>(1,2);
+
     
 
     Alumno* encontrado = NULL;
@@ -191,7 +193,7 @@ void bajaParcial(Lista &lista_alumnos_activos, Lista &lista_alumnos_inactivos, P
         int mat;
         cout << "Ingrese matrícula: ";
         mat = leerValor<int>(0,9999999);
-        encontrado = buscarPorMatricula(lista_alumnos_activos, mat);
+        encontrado = buscarPorMatricula(lista_alumnos_activos, mat, NULL);
     } 
 	else {
         string nombre;
@@ -208,7 +210,7 @@ void bajaParcial(Lista &lista_alumnos_activos, Lista &lista_alumnos_inactivos, P
 	else{
 		// Eliminarlo de la lista de activos
 		Alumno* baja = eliminarDeLista(lista_alumnos_activos, encontrado->matricula);
-    	if (baja != NULL) {
+    	if (baja != NULL){
         	baja->situacion = false;
 	
     	    // Insertar ordenadamente en la lista de bajas parciales
@@ -221,9 +223,11 @@ void bajaParcial(Lista &lista_alumnos_activos, Lista &lista_alumnos_inactivos, P
     	    cout << "Alumno dado de baja parcialmente.\n";
     	    
     	    //**Eliminar las siguientes 6 lineas para no mostrar listas**
-        	mostrar(lista_alumnos_inactivos);
+        	cout << "\n**Lista de alumnos inactivos**\n";
+            mostrar(lista_alumnos_inactivos);
 			cout << "\n-------------------------------";
 			cout << "\n-------------------------------\n";
+        	cout << "\n**Pila de alumnos inactivos**\n";
         	mostrar(pila_alumnos_inactivos);
 			cout << "\n-------------------------------";
 			cout << "\n-------------------------------\n";
@@ -286,7 +290,7 @@ void bajaTotal(Lista &lista_alumnos_inactivos, Pila &pila_alumnos_inactivos) {
         int mat;
         cout << "Ingrese matrícula: ";
         mat = leerValor<int>(0,999999);
-        encontrado = buscarPorMatricula(lista_alumnos_inactivos, mat);
+        encontrado = buscarPorMatricula(lista_alumnos_inactivos, mat, NULL);
     } 
 	else{
         string nombre;
@@ -512,4 +516,21 @@ void mostrarPorcentajes(Lista &lista_alumnos_activos) {
 
 void mostrarDatos(Lista &lista_alumnos_activos) {
 
+}
+
+Alumno* nodo_medio(Lista cabeza, Lista fin){
+    if (cabeza == NULL) {
+        return NULL;
+    }
+
+    Alumno* lento = cabeza;
+    Alumno* rapido = cabeza;
+
+    
+    while (rapido != fin && rapido->next != fin) {
+        lento = lento->next;
+        rapido = rapido->next->next;
+    }
+
+    return lento;
 }
