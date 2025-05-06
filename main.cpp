@@ -515,7 +515,62 @@ void mostrarPorcentajes(Lista &lista_alumnos_activos) {
 }
 
 void mostrarDatos(Lista &lista_alumnos_activos) {
+    int opcion, matricula;
+    string nombre;
+    Alumno* estudiante;
+    do{
+		system("cls");	
+		cout << "\n***SUBMENU DE REPORTES***"<< endl;
+		cout << "\n**MENU DE BUSQUEDA   **" << endl;
+    	cout << "1. Buscar por matricula" << endl;
+    	cout << "2. Buscar por nombre" << endl;
+        cout << "3. Salir" << endl;
+    	cout << "Seleccione una opción: ";
+		opcion = leerValor<int>(1,3);
+		cout << opcion << " <-";
+		system("cls");	
+        switch (opcion)
+        {
+        case 1:
+            cin.ignore();
+            cout << "Ingrese la matricula del alumno: ";
+            matricula = leerValor<int>(0,99999999);
+            estudiante = buscarPorMatricula(lista_alumnos_activos,matricula,NULL);
+            if(estudiante != NULL){
+                cout << "\n-----------------------------------\n";
+                cout << "Nombre: " << estudiante->nombre << endl;
+                cout << "Edad: " << estudiante->edad << endl;
+                cout << "Direccion: " << estudiante->direccion << endl;
+                cout << "Telefono: " << estudiante->telefono << endl;
+                system("pause");
+            } else {
+                cout << "Alumno no encontrado..." << endl;
+                system("pause");
+            }
+            break;
 
+        case 2:
+            cin.ignore();
+            cout << "Ingrese el nombre del alumno: ";
+            nombre = leerCadena();
+            estudiante = buscarPorNombre(lista_alumnos_activos, nombre);
+            if(estudiante != NULL){
+                cout << "\n-----------------------------------\n";
+                cout << "Nombre: " << estudiante->nombre << endl;
+                cout << "Edad: " << estudiante->edad << endl;
+                cout << "Direccion: " << estudiante->direccion << endl;
+                cout << "Telefono: " << estudiante->telefono << endl;
+                system("pause");
+            } else {
+                cout << "Alumno no encontrado..." << endl;
+                system("pause");
+            }
+            // Falta verificar que pasa cuando es mas de un alumno con el mismo nombre      
+            break;
+        case 3:
+            break;
+        }
+    }while(opcion != 3);
 }
 
 Alumno* nodo_medio(Lista cabeza, Lista fin){
