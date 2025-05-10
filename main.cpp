@@ -4,6 +4,7 @@
  * Luis Fernando Segobia Torres 2177528
  * */
 #include<iostream>
+#include<string>
 #include<ctime>
 #include<limits>
 
@@ -66,18 +67,30 @@ struct Cola{
 };
 
 //Declaracion de las funciones
-void insertarOrdenado(Lista &cabeza, Alumno* nuevo);
+
+// Funciones de ordenamiento y busqueda / manejo de estructuras
 Lista buscarPorMatricula(Alumno* cabeza, int matricula, Alumno* fin);
 Alumno* buscarPorNombre(Lista cabeza, const string& nombre);
+void insertarOrdenado(Lista &cabeza, Alumno* nuevo);
+void eliminar_lista(Lista &lista);
+void mostrar(const Lista lista);
+
+// Menu
+int mostrarMenu();
+
+// FUNCIONES ESPECIFICAS p/ inciso
+
+// Inciso 1 - Alta de estudiantes
+void altaAlumnos(Lista &lista_activos);
+
 Lista eliminarDeLista(Lista &cabeza, int matricula);
+// Inciso 2 - Baja de estudiantes
+int submenu_bajas(Lista &lista_alumnos_activos, Lista &lista_alumnos_inactivos, Pila &pila_alumnos_inactivos);
 void bajaParcial(Lista &lista_alumnos_activos, Lista &lista_alumnos_inactivos, Pila &pila_alumnos_inactivos);
 void deshacerBaja(Lista &lista_alumnos_activos, Lista &lista_alumnos_inactivos, Pila &pila_alumnos_inactivos);
 void bajaTotal(Lista &lista_alumnos_inactivos, Pila &pila_alumnos_inactivos);
-void eliminar_lista(Lista &lista);
-int mostrarMenu();
-int submenu_bajas(Lista &lista_alumnos_activos, Lista &lista_alumnos_inactivos, Pila &pila_alumnos_inactivos);
-void altaAlumnos(Lista &lista_activos);
-void mostrar(const Lista lista);
+
+// Inciso 4 - Reportes
 void submenuReportes(Lista &lista_alumnos_activos, Lista &lista_alumnos_inactivos);
 void mostrarPorcentajes(Lista &lista_alumnos_activos);
 void mostrarDatos(Lista &lista_alumnos_activos);
@@ -192,6 +205,7 @@ void bajaParcial(Lista &lista_alumnos_activos, Lista &lista_alumnos_inactivos, P
     Alumno* encontrado = NULL;
     if (opcion == 1) {
         int mat;
+        cout << "Ingrese matricula: ";
         cout << "Ingrese matricula: ";
         mat = leerValor<int>(0,9999999);
         encontrado = buscarPorMatricula(lista_alumnos_activos, mat, NULL);
