@@ -183,7 +183,7 @@ void bajaParcial(Lista &lista_alumnos_activos, Lista &lista_alumnos_inactivos, P
 	cout << "\n-------------------------------\n";
 	
 	int opcion;
-    cout << "Buscar por:\n1. Matrícula\n2. Nombre\nOpción: ";
+    cout << "Buscar por:\n1. Matracula\n2. Nombre\nOpcion: ";
     opcion = leerValor<int>(1,2);
 
     
@@ -191,7 +191,7 @@ void bajaParcial(Lista &lista_alumnos_activos, Lista &lista_alumnos_inactivos, P
     Alumno* encontrado = NULL;
     if (opcion == 1) {
         int mat;
-        cout << "Ingrese matrícula: ";
+        cout << "Ingrese matricula: ";
         mat = leerValor<int>(0,9999999);
         encontrado = buscarPorMatricula(lista_alumnos_activos, mat, NULL);
     } 
@@ -217,8 +217,9 @@ void bajaParcial(Lista &lista_alumnos_activos, Lista &lista_alumnos_inactivos, P
         	insertarOrdenado(lista_alumnos_inactivos, baja);
 	
     	    // Insertar en la pila de bajas (al principio)
-        	baja->next = pila_alumnos_inactivos;
-	        pila_alumnos_inactivos = baja;
+        	Alumno* copia = new Alumno(*baja); // copia todos los datos, pero crea un nodo nuevo
+			copia->next = pila_alumnos_inactivos;
+			pila_alumnos_inactivos = copia;
 	
     	    cout << "Alumno dado de baja parcialmente.\n";
     	    
@@ -257,7 +258,7 @@ void deshacerBaja(Lista &lista_alumnos_activos, Lista &lista_alumnos_inactivos, 
 	        system("pause");
 	    }
 	    else{
-	    	// Cambiar situación a activo y agregarlo a la lista de activos
+	    	// Cambiar situacion a activo y agregarlo a la lista de activos
 		    eliminado->situacion = true;
 		    insertarOrdenado(lista_alumnos_activos, eliminado);
 		
@@ -278,17 +279,17 @@ void bajaTotal(Lista &lista_alumnos_inactivos, Pila &pila_alumnos_inactivos) {
     cout << "\n--- Baja Total ---\n";
     int opcion;
     do{
-    	cout << "Buscar por:\n1. Matrícula\n2. Nombre\nOpción: ";
+    	cout << "Buscar por:\n1. Matricula\n2. Nombre\nOpcion: ";
     	opcion = leerValor<int>(1,2);
 		cout << opcion << " <-";	
     	if (opcion != 1 && opcion != 2)
-    		cout << "Opción inválida\n";
+    		cout << "Opcion invalida\n";
 	}while (opcion != 1 && opcion != 2);
 
     Alumno* encontrado = NULL;
     if (opcion == 1) {
         int mat;
-        cout << "Ingrese matrícula: ";
+        cout << "Ingrese matricula: ";
         mat = leerValor<int>(0,999999);
         encontrado = buscarPorMatricula(lista_alumnos_inactivos, mat, NULL);
     } 
@@ -347,11 +348,11 @@ int mostrarMenu() {
     cout << "2. Baja de estudiantes\n";
     cout << "3. Recuperar alumno\n";
     cout << "4. Reportes\n";
-    cout << "5. Modificación de datos\n";
+    cout << "5. Modificacion de datos\n";
     cout << "6. Control de inscripciones\n";
-    cout << "7. Creación de grupos\n";
+    cout << "7. Creacion de grupos\n";
     cout << "8. Salir\n";
-    cout << "Seleccione una opción: ";
+    cout << "Seleccione una opcion: ";
 	int op = leerValor<int>(1,8);
 	cout << op << " <-";
 	return op;
@@ -441,7 +442,7 @@ void mostrar(const Lista lista){
 			<< "Promedio: " << aux->promedio << endl
 			<< "Direccion: " << aux->direccion << endl
 			<< "Telefono: " << aux->telefono << endl
-			<< "Situación: " << (aux->situacion == 1 ? "**Activo**" : "**Inactivo**") << endl;
+			<< "Situacion: " << (aux->situacion == 1 ? "**Activo**" : "**Inactivo**") << endl;
 		aux = aux->next;
 	}
     cout << endl;
