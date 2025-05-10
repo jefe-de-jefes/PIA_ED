@@ -178,6 +178,7 @@ void bajaParcial(Lista &lista_alumnos_activos, Lista &lista_alumnos_inactivos, P
 	cout << "\n--- Baja Parcial ---\n";
 	
 	//**Eliminar las siguientes 3 lineas para no mostrar listas**
+	cout << "\n***Lista de alumnos activos***"<< endl;
 	mostrar(lista_alumnos_activos);
 	cout << "\n-------------------------------";
 	cout << "\n-------------------------------\n";
@@ -224,11 +225,11 @@ void bajaParcial(Lista &lista_alumnos_activos, Lista &lista_alumnos_inactivos, P
     	    cout << "Alumno dado de baja parcialmente.\n";
     	    
     	    //**Eliminar las siguientes 6 lineas para no mostrar listas**
-        	cout << "\n**Lista de alumnos inactivos**\n";
+        	cout << "\n***Lista de alumnos inactivos***"<< endl;
             mostrar(lista_alumnos_inactivos);
 			cout << "\n-------------------------------";
 			cout << "\n-------------------------------\n";
-        	cout << "\n**Pila de alumnos inactivos**\n";
+        	cout << "\n***Pila de alumnos inactivos***"<< endl;
         	mostrar(pila_alumnos_inactivos);
 			cout << "\n-------------------------------";
 			cout << "\n-------------------------------\n";
@@ -265,6 +266,7 @@ void deshacerBaja(Lista &lista_alumnos_activos, Lista &lista_alumnos_inactivos, 
 		    cout << "Baja deshecha exitosamente. Alumno reactivado.\n";
 		    
 		    //**Eliminar las siguientes 3 lineas para no mostrar listas**
+		    cout << "\n***Pila de alumnos inactivos***"<< endl;
 		    mostrar(pila_alumnos_inactivos);
 			cout << "\n-------------------------------";
 			cout << "\n-------------------------------\n";
@@ -277,6 +279,12 @@ void deshacerBaja(Lista &lista_alumnos_activos, Lista &lista_alumnos_inactivos, 
 
 void bajaTotal(Lista &lista_alumnos_inactivos, Pila &pila_alumnos_inactivos) {
     cout << "\n--- Baja Total ---\n";
+    
+    cout << "\n***Lista de alumnos inactivos***"<< endl;
+	mostrar(lista_alumnos_inactivos);
+	cout << "\n-------------------------------";
+	cout << "\n-------------------------------\n";
+		
     int opcion;
     do{
     	cout << "Buscar por:\n1. Matricula\n2. Nombre\nOpcion: ";
@@ -296,6 +304,7 @@ void bajaTotal(Lista &lista_alumnos_inactivos, Pila &pila_alumnos_inactivos) {
 	else{
         string nombre;
         cout << "Ingrese nombre: ";
+        cin.ignore();
         nombre = leerCadena();
         encontrado = buscarPorNombre(lista_alumnos_inactivos, nombre);
 	}
@@ -308,7 +317,7 @@ void bajaTotal(Lista &lista_alumnos_inactivos, Pila &pila_alumnos_inactivos) {
     	// Eliminar de la lista de bajas parciales
 	    Alumno* eliminado = eliminarDeLista(lista_alumnos_inactivos, encontrado->matricula);
 	
-	    // También eliminar de la pila (si está ahí)
+	    // TambiÃ©n eliminar de la pila (si estÃ¡ ahÃ­)
 	    eliminarDeLista(pila_alumnos_inactivos, eliminado->matricula);
 	
 	    // Liberar memoria
@@ -318,9 +327,11 @@ void bajaTotal(Lista &lista_alumnos_inactivos, Pila &pila_alumnos_inactivos) {
 	    
 	    
 	    //**Eliminar las siguientes 3 lineas para no mostrar listas**
+	    cout << "\n***Lista de alumnos inactivos***"<< endl;
 	    mostrar(lista_alumnos_inactivos);
 		cout << "\n-------------------------------";
 		cout << "\n-------------------------------\n";
+		cout << "\n***Pila de alumnos inactivos***"<< endl;
 	    mostrar(pila_alumnos_inactivos);
 		cout << "\n-------------------------------";
 		cout << "\n-------------------------------\n";
@@ -368,7 +379,7 @@ int submenu_bajas(Lista &lista_alumnos_activos, Lista &lista_alumnos_inactivos, 
     	cout << "2. Deshacer ultima baja\n";
     	cout << "3. Baja total\n";
     	cout << "4. Salir\n";
-    	cout << "Seleccione una opción: ";
+    	cout << "Seleccione una opciÃ³n: ";
 		opcion = leerValor<int>(1,4);
 		cout << opcion << " <-";
 		system("cls");	
@@ -392,11 +403,11 @@ void altaAlumnos(Lista &lista_activos) {
     cout << "Matricula: ";
     nuevo->matricula = leerValor<int>(0,99999999);
 
-    // Validar si la matrícula ya existe
+    // Validar si la matrÃ­cula ya existe
     Alumno* temp = lista_activos;
     while (temp != NULL) {
         if (temp->matricula == nuevo->matricula) {
-            cout << "Error: La matrícula ya existe.\n";
+            cout << "Error: La matrÃ­cula ya existe.\n";
             delete nuevo;
             return;
         }
@@ -429,7 +440,6 @@ void altaAlumnos(Lista &lista_activos) {
 
 //**Eliminable jusnto con su declaracion**
 void mostrar(const Lista lista){
-	cout << "\n***LISTA***" << endl;
 	Alumno *aux = lista;
 	if(lista == NULL){
 		cout << "Lista vacia" << endl;
@@ -459,7 +469,7 @@ void submenuReportes(Lista &lista_alumnos_activos, Lista &lista_alumnos_inactivo
     	cout << "3. Datos generales" << endl;
     	cout << "4. Alumnos inactivos" << endl;
         cout << "5. Salir " << endl;
-    	cout << "Seleccione una opción: ";
+    	cout << "Seleccione una opciÃ³n: ";
 		opcion = leerValor<int>(1,5);
 		cout << opcion << " <-";
 		system("cls");	
@@ -526,7 +536,7 @@ void mostrarDatos(Lista &lista_alumnos_activos) {
     	cout << "1. Buscar por matricula" << endl;
     	cout << "2. Buscar por nombre" << endl;
         cout << "3. Salir" << endl;
-    	cout << "Seleccione una opción: ";
+    	cout << "Seleccione una opciÃ³n: ";
 		opcion = leerValor<int>(1,3);
 		cout << opcion << " <-";
 		system("cls");	
