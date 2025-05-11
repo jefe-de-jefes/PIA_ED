@@ -91,6 +91,7 @@ void insertarOrdenado(Lista &cabeza, Alumno* nuevo);
 void eliminar_lista(Lista &lista);
 void mostrar(const Lista lista);
 void mostrarAlumno(Alumno* alumno);
+int totalAlumnos(Lista lista_alumnos_activos);
 
 // Menu
 int mostrarMenu();
@@ -294,7 +295,6 @@ void bajaParcial(Lista &lista_alumnos_activos, Lista &lista_alumnos_inactivos, P
 	else {
         string nombre;
         cout << "Ingrese nombre: ";
-        cin.ignore();
         nombre = leerCadena();
         encontrado = buscarPorNombre(lista_alumnos_activos, nombre);
 	}
@@ -518,7 +518,6 @@ void altaAlumnos(Lista &lista_activos) {
     nuevo->edad = leerValor<int>(1,100);
     cout << "Promedio: ";
     nuevo->promedio = leerValor<float>(0,100.0);
-    cin.ignore();
     cout << "Direccion: ";
     nuevo->direccion = leerCadena();
     cout << "Telefono: ";
@@ -865,6 +864,21 @@ void modificarDatos(Lista &lista_alumnos_activos) {
     cout << "Datos modificados correctamente.\n";
     system("pause");
 }
+int totalAlumnos(Lista lista_alumnos_activos){
+    if (lista_alumnos_activos == NULL)  // Si la lista está vacía
+    {
+        cout << "La lista de alumnos activos está vacía." << endl;
+        return 0;
+    }
+    
+    int total = 0;
+    Alumno* aux = lista_alumnos_activos;
+    while(aux != NULL){
+        total++;
+        aux = aux->next;
+    }
+    return total;
+}
 
 void crearGrupos(Lista alumnos_activos){
     system("cls");
@@ -872,8 +886,34 @@ void crearGrupos(Lista alumnos_activos){
         cout << "No hay alumnos disponibles para crear grupos." << endl;
         return;
     }
+    Alumno* aux = alumnos_activos;
+
     
     cout << "\n--- Crear grupos ---\n";
     cout << "Ingrese el numero de grupos: ";
-    //int gurpos = leerValor<int>(1, );
+    int grupos = leerValor<int>(1, totalAlumnos(alumnos_activos));
+    int alumnosPorGrupo = totalAlumnos(alumnos_activos) / grupos;
+    int alumnosRestantes = totalAlumnos(alumnos_activos) % grupos;
+
+    for (int i = 0; i < grupos; i++)
+    {
+        cout << "\n***Grupo " << i + 1 << "***" << endl;
+        for (int j = 0; j < alumnosPorGrupo; j++)
+        {
+            if (alumnos_activos != NULL)
+            {
+                mostrarAlumno(aux);
+                aux = aux->next;
+            }
+        }
+        if (alumnosRestantes > 0)
+        {
+            mostrarAlumno(aux);
+            aux = aux->next;
+            alumnosRestantes--;
+        }
+        cout << endl;
+    }
+    cout << "\nGrupos creados exitosamente.\n";
+    system("pause");
 }
