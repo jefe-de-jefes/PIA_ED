@@ -7,43 +7,59 @@
 #include<string>
 #include<ctime>
 #include<limits>
+#include<sstream>
+#include<algorithm>
 
 using namespace std;
+
+// Esta funcion lee un valor de tipo T y valida que este dentro de un rango
+// Si el valor no es valido, vuelve a pedir la entrada
 template <typename T>
-T leerValor(T menor, T mayor){
+T leerValor(T menor, T mayor) {
     T valor;
-    while(true)
-    {
-        cin >> valor;
-        if(cin.fail())
-        {
+    string linea;
+
+    while (true) {
+        getline(cin, linea);  // Leer toda la línea
+        stringstream ss(linea);
+
+        if (!(ss >> valor)) {
             cout << "Numero no valido, intente nuevamente.." << endl;
-            cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
             continue;
         }
-        
-        if(valor < menor || valor > mayor)
-        {
-            cout << "\n**Numero fuera de rango, intente nuevamente**" << endl;
-			continue;
-        }else{
-            return valor;
-        }
-    }
 
+        // Verificar que no haya más datos después del número
+        char c;
+        if (ss >> c) {
+            cout << "Entrada invalida (demasiados datos). Solo ingrese un numero." << endl;
+            continue;
+        }
+
+        if (valor < menor || valor > mayor) {
+            cout << "\n**Numero fuera de rango (" << menor << " - " << mayor << "), intente nuevamente**" << endl;
+            continue;
+        }
+
+        return valor;
+    }
 }
+
+// Esta funcion lee una cadena de texto y valida que no este vacia
+// Si la cadena esta vacia, vuelve a pedir la entrada
 string leerCadena() {
     string entrada;
-    
+
     do {
         getline(cin, entrada);  
-        if (entrada.empty()) {
-            cout << "\n**La entrada no puede estar vacia. Intenta de nuevo.**" << endl;
-        }
 
-    } while(entrada.empty());
-    
+        // Verifica si la cadena está vacía o solo tiene espacios
+        if (entrada.empty() || all_of(entrada.begin(), entrada.end(), ::isspace)) {
+            cout << "\n**La entrada no puede estar vacia. Intenta de nuevo.**" << endl;
+        } else {
+            break;
+        }
+    } while (true);
+
     return entrada;
 }
 // Estructura del nodo (Alumno)
@@ -105,6 +121,9 @@ int total_activos = 0;
 // Inciso 5 - Modificar datos
 void modificarDatos(Lista &lista_alumnos_activos);
 
+//inciso 8 - Crear grupos
+void crearGrupos(Lista alumnos_activos);
+
 int main(){
 	int op;
 	Lista lista_alumnos_activos = NULL;
@@ -122,7 +141,7 @@ int main(){
             case 4: submenuReportes(lista_alumnos_activos, lista_alumnos_inactivos); break;
             case 5: modificarDatos(lista_alumnos_activos); break;
             case 6: break;
-            case 7: break;
+            case 7: crearGrupos(lista_alumnos_activos);break;
             case 8: 
             	cout << "\nSaliendo....";
 				eliminar_lista(lista_alumnos_activos);
@@ -493,7 +512,6 @@ void altaAlumnos(Lista &lista_activos) {
         }
         temp = temp->next;
     }
-    cin.ignore();
     cout << "Nombre: ";
     nuevo->nombre = leerCadena();
     cout << "Edad: ";
@@ -846,4 +864,16 @@ void modificarDatos(Lista &lista_alumnos_activos) {
 
     cout << "Datos modificados correctamente.\n";
     system("pause");
+}
+
+void crearGrupos(Lista alumnos_activos){
+    system("cls");
+    if (alumnos_activos == NULL) {
+        cout << "No hay alumnos disponibles para crear grupos." << endl;
+        return;
+    }
+    
+    cout << "\n--- Crear grupos ---\n";
+    cout << "Ingrese el numero de grupos: ";
+    //int gurpos = leerValor<int>(1, );
 }
