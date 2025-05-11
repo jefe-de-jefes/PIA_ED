@@ -5,10 +5,9 @@
  * */
 #include<iostream>
 #include<string>
-#include<ctime>
 #include<limits>
-#include<sstream>
-#include<algorithm>
+#include<sstream>//se utiliza en la funcion leerValor
+#include<algorithm>//se utiliza en la funcion leerCadena
 
 using namespace std;
 
@@ -156,11 +155,12 @@ int main(){
     return 0;
 }
 
+//Se utiliza para insertar un nuevo nodo en la lista de alumnos activos de manera ordenada
 void insertarOrdenado(Lista &cabeza, Alumno* nuevo) {
-    if (cabeza == NULL || nuevo->matricula < cabeza->matricula) {
+    if (cabeza == NULL || nuevo->matricula < cabeza->matricula) {//si la lista esta vacia o si la matricula es menor que la cabeza agregamos al inicio
         nuevo->next = cabeza;
         cabeza = nuevo;
-    } else {
+    } else { // en caso contrario recorremos la lista hasta encontrar null o que la matricula sea mayor que la siguiente
         Alumno* actual = cabeza;
         while (actual->next != NULL && actual->next->matricula < nuevo->matricula) {
             actual = actual->next;
@@ -169,6 +169,7 @@ void insertarOrdenado(Lista &cabeza, Alumno* nuevo) {
         actual->next = nuevo;
     }
 }
+// Se utiliza para buscar un nodo en la lista de alumnos activos por matricula se utiliza busqueda binaria (con recursividad), cuando lo encuentra retorna al Alumno
 Alumno* buscarPorMatricula(Alumno* cabeza, int matricula, Alumno* fin) {
     system("cls");
     cout << "\n--- Buscando por matricula ---\n";
@@ -180,13 +181,14 @@ Alumno* buscarPorMatricula(Alumno* cabeza, int matricula, Alumno* fin) {
         return medio;
     }
 
-    if (matricula < medio->matricula) {
+    if (matricula < medio->matricula) {//si la matricula es menor que la del medio, buscamos en la parte izquierda, por eso se pasa el medio como fin
         return buscarPorMatricula(cabeza, matricula, medio);
     }
-
+    // si la matricula es mayor que la del medio, buscamos en la parte derecha, por eso se pasa el medio como cabeza
     return buscarPorMatricula(medio->next, matricula, fin);
 }
 
+// Se utiliza para buscar un nodo en la lista de alumnos por nombre, se utiliza busqueda secuencial y retorna el Alumno
 Alumno* buscarPorNombre(Lista cabeza, const string& nombre) {
     system("cls");
     cout << "\n--- Buscando por nombre ---\n";
@@ -233,6 +235,7 @@ Alumno* buscarPorNombre(Lista cabeza, const string& nombre) {
     return NULL;
 }
 
+// Se utiliza para eliminar un nodo de la lista de alumnos, se busca por matricula y se elimina el nodo, retorna el nodo eliminado
 Lista eliminarDeLista(Lista &cabeza, int matricula) {
     Alumno* actual = cabeza;
     Alumno* anterior = NULL;
@@ -254,6 +257,7 @@ Lista eliminarDeLista(Lista &cabeza, int matricula) {
     return actual;
 }
 
+// Se utiliza para mostrar un alumno en especifico, se le pasa el nodo y se imprime
 void mostrarAlumno(Alumno* alumno) {
     cout << "\n-----------------------------------\n";
     if(alumno == NULL){
@@ -270,10 +274,11 @@ void mostrarAlumno(Alumno* alumno) {
     cout << endl;
 }
 
+// Se utiliza para dar de baja a un alumno, se le pasa la lista de alumnos activos y la lista de alumnos inactivos
+//se busca el alumno por matricula o nombre y se elimina de la lista de activos y se agrega a la lista de inactivos igual que a la pila de inactivos
 void bajaParcial(Lista &lista_alumnos_activos, Lista &lista_alumnos_inactivos, Pila &pila_alumnos_inactivos) { 
 	cout << "\n--- Baja Parcial ---\n";
 	
-	//**Eliminar las siguientes 3 lineas para no mostrar listas**
 	cout << "\n***Lista de alumnos activos***"<< endl;
 	mostrar(lista_alumnos_activos);
 	cout << "\n-------------------------------";
@@ -319,7 +324,6 @@ void bajaParcial(Lista &lista_alumnos_activos, Lista &lista_alumnos_inactivos, P
 	
     	    cout << "Alumno dado de baja parcialmente.\n";
     	    
-    	    //**Eliminar las siguientes 6 lineas para no mostrar listas**
         	cout << "\n***Lista de alumnos inactivos***"<< endl;
             mostrar(lista_alumnos_inactivos);
 			cout << "\n-------------------------------";
@@ -334,6 +338,9 @@ void bajaParcial(Lista &lista_alumnos_activos, Lista &lista_alumnos_inactivos, P
 	    system("pause");
 	}
 }
+
+// Se utiliza para deshacer la baja de un alumno, se le pasa la lista de alumnos activos, la lista de alumnos inactivos y la pila de alumnos inactivos
+//se busca el alumno en la pila de inactivos y se elimina de la pila y lista de inactivos y se agrega a la lista de activos
 void deshacerBaja(Lista &lista_alumnos_activos, Lista &lista_alumnos_inactivos, Pila &pila_alumnos_inactivos) {
 	cout << "\n--- Deshacer Baja Parcial ---\n";
 	
@@ -360,7 +367,6 @@ void deshacerBaja(Lista &lista_alumnos_activos, Lista &lista_alumnos_inactivos, 
 		
 		    cout << "Baja deshecha exitosamente. Alumno con matricula " << eliminado->matricula << " reactivado.\n";
 		    
-		    //**Eliminar las siguientes 3 lineas para no mostrar listas**
 		    cout << "\n***Pila de alumnos inactivos***"<< endl;
 		    mostrar(pila_alumnos_inactivos);
 			cout << "\n-------------------------------";
@@ -372,6 +378,8 @@ void deshacerBaja(Lista &lista_alumnos_activos, Lista &lista_alumnos_inactivos, 
 	}
 }
 
+// Se utiliza para dar de baja total a un alumno, se le pasa la lista de alumnos inactivos y la pila de alumnos inactivos
+//No hay manera de despues darlo de baja aqui poder recuperarlo
 void bajaTotal(Lista &lista_alumnos_inactivos, Pila &pila_alumnos_inactivos) {
     cout << "\n--- Baja Total ---\n";
     
@@ -399,7 +407,6 @@ void bajaTotal(Lista &lista_alumnos_inactivos, Pila &pila_alumnos_inactivos) {
 	else{
         string nombre;
         cout << "Ingrese nombre: ";
-        cin.ignore();
         nombre = leerCadena();
         encontrado = buscarPorNombre(lista_alumnos_inactivos, nombre);
 	}
@@ -436,6 +443,7 @@ void bajaTotal(Lista &lista_alumnos_inactivos, Pila &pila_alumnos_inactivos) {
 	}
 }
 
+//Se utiliza para libterar la memoria de la lista de alumnos activos, inactivos y pila de alumnos inactivos
 void eliminar_lista(Lista &lista){
 	Lista p;
     p = lista;
@@ -448,6 +456,7 @@ void eliminar_lista(Lista &lista){
         }
 }
 
+//Imprime el menu principal y devuelve la opcion que ingresa el usuario
 int mostrarMenu() {
     system("cls");	
 	cout << "\n***MENU PRINCIPAL***"<< endl;
@@ -466,13 +475,14 @@ int mostrarMenu() {
 	return op;
 }
 
+//Es el submenu de la opcion de bajas, devuelve la opcion que ingresa el usuario
 int submenu_bajas(Lista &lista_alumnos_activos, Lista &lista_alumnos_inactivos, Pila &pila_alumnos_inactivos){
 	int opcion;
 	do{
 		system("cls");	
 		cout << "\n***SUBMENU DE BAJA***"<< endl;
 		cout << "\n**MENU**" << endl;
-    	cout << "1. Baja principal\n";
+    	cout << "1. Baja parcial\n";
     	cout << "2. Deshacer ultima baja\n";
     	cout << "3. Baja total\n";
     	cout << "4. Salir\n";
@@ -491,7 +501,7 @@ int submenu_bajas(Lista &lista_alumnos_activos, Lista &lista_alumnos_inactivos, 
 	return opcion;
 }
 
-
+//Aqui agregamos al alumno, se pide la informacion y lo agrega a la lista de alumnos activos
 void altaAlumnos(Lista &lista_activos) {
 	system("cls");	
     Alumno* nuevo = new Alumno;
@@ -535,7 +545,7 @@ void altaAlumnos(Lista &lista_activos) {
 	system("pause");
 }
 
-//**Eliminable jusnto con su declaracion**
+// Se utiliza para mostrar la lista de alumnos, se le pasa la lista y se imprime
 void mostrar(const Lista lista){
 	Alumno *aux = lista;
 	if(lista == NULL){
@@ -555,6 +565,7 @@ void mostrar(const Lista lista){
     cout << endl;
 }
 
+//Se utiliza para imprimir el menu de reportes y proceder con cada opcion que ingrese el usuario
 void submenuReportes(Lista &lista_alumnos_activos, Lista &lista_alumnos_inactivos){
 	int opcion;
 	do{
@@ -580,6 +591,7 @@ void submenuReportes(Lista &lista_alumnos_activos, Lista &lista_alumnos_inactivo
 	}while (opcion != 5);
 }
 
+// Se utiliza para mostrar los alumnos aprobados, se le pasa la lista de alumnos activos y si cumple con promedio >= 70 se imprime la info del alumno
 void mostrarAprobados(Lista &lista_alumnos_activos) {
     Alumno *aux = lista_alumnos_activos;
     if(lista_alumnos_activos == NULL) {
@@ -596,6 +608,7 @@ void mostrarAprobados(Lista &lista_alumnos_activos) {
     }
 }
 
+// Se utiliza para mostrar los porcentajes de alumnos aprobados y reprobados, se le pasa la lista de alumnos activos y se calcula el porcentaje
 void mostrarPorcentajes(Lista &lista_alumnos_activos) { 
     Alumno *aux = lista_alumnos_activos;
     float n_aprobados = 0, n_reprobados = 0, n_total = 0;
@@ -622,6 +635,7 @@ void mostrarPorcentajes(Lista &lista_alumnos_activos) {
     cout << "Porcentaje aprobados " << porcentaje_aprobados << "%" << endl;
 }
 
+//Aqui se muestran los datos del alumno dependiendo de la matricula o nombre que brinde el usuario 
 void mostrarDatos(Lista &lista_alumnos_activos) {
     int opcion, matricula;
     string nombre;
@@ -640,7 +654,6 @@ void mostrarDatos(Lista &lista_alumnos_activos) {
         switch (opcion)
         {
         case 1:
-            cin.ignore();
             cout << "Ingrese la matricula del alumno: ";
             matricula = leerValor<int>(0,99999999);
             estudiante = buscarPorMatricula(lista_alumnos_activos,matricula,NULL);
@@ -658,7 +671,6 @@ void mostrarDatos(Lista &lista_alumnos_activos) {
             break;
 
         case 2:
-            cin.ignore();
             cout << "Ingrese el nombre del alumno: ";
             nombre = leerCadena();
             estudiante = buscarPorNombre(lista_alumnos_activos, nombre);
@@ -673,7 +685,6 @@ void mostrarDatos(Lista &lista_alumnos_activos) {
                 cout << "Alumno no encontrado..." << endl;
                 system("pause");
             }
-            // Falta verificar que pasa cuando es mas de un alumno con el mismo nombre      
             break;
         case 3:
             break;
@@ -681,6 +692,7 @@ void mostrarDatos(Lista &lista_alumnos_activos) {
     }while(opcion != 3);
 }
 
+//Esta funcion nos devuelve el nodo que esta en medio de la lista que utilizamos para la busqueda binaria
 Alumno* nodo_medio(Lista cabeza, Lista fin){
     if (cabeza == NULL) {
         return NULL;
@@ -698,6 +710,7 @@ Alumno* nodo_medio(Lista cabeza, Lista fin){
     return lento;
 }
 
+//Se utiliza la funcion de recuperar alumno para eliminar el nodo de la pila y lista de inactivos y pasarla nuevamente a la lista de activos
 void recuperarAlumno(Lista &lista_alumnos_activos, Lista &lista_alumnos_inactivos, Pila &pila_alumnos_inactivos){
     cout << "\n--- Recuperar alumno ---\n";
 	
@@ -725,7 +738,6 @@ void recuperarAlumno(Lista &lista_alumnos_activos, Lista &lista_alumnos_inactivo
 	else {
         string nombre;
         cout << "Ingrese nombre: ";
-        cin.ignore();
         nombre = leerCadena();
         encontrado = buscarPorNombre(lista_alumnos_inactivos, nombre);
 	}
@@ -764,6 +776,7 @@ void recuperarAlumno(Lista &lista_alumnos_activos, Lista &lista_alumnos_inactivo
 	}
 }
 
+//Utilizado en el menu de modificar datos, dependiendo los datos que quiera modificar el usuario
 void modificarDatos(Lista &lista_alumnos_activos) {
     system("cls");
     cout << "\n--- Modificar datos de alumno activo ---\n";
@@ -787,7 +800,6 @@ void modificarDatos(Lista &lista_alumnos_activos) {
     } else {
         string nombre;
         cout << "Ingrese nombre: ";
-        cin.ignore();
         nombre = leerCadena();
         encontrado = buscarPorNombre(lista_alumnos_activos, nombre);
     }
@@ -802,6 +814,7 @@ void modificarDatos(Lista &lista_alumnos_activos) {
     cout << "\nModificar:\n1. Matricula\n2. Nombre\n3. Edad\n4. Promedio general\n5. Direccion\n6. Telefono\nOpcion: ";
     opcionCampo = leerValor<int>(1, 6);
 
+    //se modficia el campo especifico que se requiera modificar
     switch (opcionCampo) {
         case 1: { // Matricula
             cout << "Nueva matricula: ";
@@ -827,7 +840,6 @@ void modificarDatos(Lista &lista_alumnos_activos) {
             break;
         }
         case 2: { // Nombre
-            cin.ignore();
             cout << "Nuevo nombre: ";
             encontrado->nombre = leerCadena();
             break;
@@ -843,7 +855,6 @@ void modificarDatos(Lista &lista_alumnos_activos) {
             break;
         }
         case 5: { // Direccion
-            cin.ignore();
             cout << "Nueva direccion: ";
             encontrado->direccion = leerCadena();
             break;
@@ -864,6 +875,8 @@ void modificarDatos(Lista &lista_alumnos_activos) {
     cout << "Datos modificados correctamente.\n";
     system("pause");
 }
+
+//Contabiliza el total de alumnos en la lista de activos
 int totalAlumnos(Lista lista_alumnos_activos){
     if (lista_alumnos_activos == NULL)  // Si la lista está vacía
     {
@@ -880,6 +893,7 @@ int totalAlumnos(Lista lista_alumnos_activos){
     return total;
 }
 
+//funcion utilizada para crear los grupos de manera equitativa, con una diferencia de un alumno entre los grupos cuando mucho
 void crearGrupos(Lista alumnos_activos){
     system("cls");
     if (alumnos_activos == NULL) {
@@ -891,13 +905,15 @@ void crearGrupos(Lista alumnos_activos){
     
     cout << "\n--- Crear grupos ---\n";
     cout << "Ingrese el numero de grupos: ";
-    int grupos = leerValor<int>(1, totalAlumnos(alumnos_activos));
-    int alumnosPorGrupo = totalAlumnos(alumnos_activos) / grupos;
-    int alumnosRestantes = totalAlumnos(alumnos_activos) % grupos;
+    int grupos = leerValor<int>(1, totalAlumnos(alumnos_activos));//Se pide el total de grupos
+    int alumnosPorGrupo = totalAlumnos(alumnos_activos) / grupos;//Obtenemos el total de alumnos por grupo (los restantes no los contamos aun)
+    int alumnosRestantes = totalAlumnos(alumnos_activos) % grupos;//se obtiene el numero de alumnos restantes (seran los que se agreguen como extra a cada grupo)
 
+    //Es el for principal donde hacemos los ciclos para asignar los grupos
     for (int i = 0; i < grupos; i++)
     {
         cout << "\n***Grupo " << i + 1 << "***" << endl;
+        //Se utiliza este for para agregar la cantidad de alumnos que le toca a cada grupo
         for (int j = 0; j < alumnosPorGrupo; j++)
         {
             if (alumnos_activos != NULL)
@@ -906,7 +922,7 @@ void crearGrupos(Lista alumnos_activos){
                 aux = aux->next;
             }
         }
-        if (alumnosRestantes > 0)
+        if (alumnosRestantes > 0)//Si hay alumnos restantes se agrega uno por cada pasada, asi a cada grupo se le agregara uno y sera de manera equitativa la reparticion
         {
             mostrarAlumno(aux);
             aux = aux->next;
