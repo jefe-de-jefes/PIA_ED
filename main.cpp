@@ -150,6 +150,8 @@ void insertarOrdenado(Lista &cabeza, Alumno* nuevo) {
     }
 }
 Alumno* buscarPorMatricula(Alumno* cabeza, int matricula, Alumno* fin) {
+    system("cls");
+    cout << "\n--- Buscando por matricula ---\n";
     if(cabeza==fin || cabeza==NULL) return NULL;
 
     Alumno* medio = nodo_medio(cabeza, fin);
@@ -166,6 +168,8 @@ Alumno* buscarPorMatricula(Alumno* cabeza, int matricula, Alumno* fin) {
 }
 
 Alumno* buscarPorNombre(Lista cabeza, const string& nombre) {
+    system("cls");
+    cout << "\n--- Buscando por nombre ---\n";
     Alumno* actual = cabeza;
     Alumno* encontrado = NULL;// este solo va a funcionar cuando hay un solo alumno con ese nombre
     int cont=0;
@@ -335,7 +339,7 @@ void deshacerBaja(Lista &lista_alumnos_activos, Lista &lista_alumnos_inactivos, 
 		    eliminado->situacion = true;
 		    insertarOrdenado(lista_alumnos_activos, eliminado);
 		
-		    cout << "Baja deshecha exitosamente. Alumno reactivado.\n";
+		    cout << "Baja deshecha exitosamente. Alumno con matricula " << eliminado->matricula << " reactivado.\n";
 		    
 		    //**Eliminar las siguientes 3 lineas para no mostrar listas**
 		    cout << "\n***Pila de alumnos inactivos***"<< endl;
@@ -389,13 +393,15 @@ void bajaTotal(Lista &lista_alumnos_inactivos, Pila &pila_alumnos_inactivos) {
     	// Eliminar de la lista de bajas parciales
 	    Alumno* eliminado = eliminarDeLista(lista_alumnos_inactivos, encontrado->matricula);
 	
-	    // TambiÃ©n eliminar de la pila (si estÃ¡ ahÃ­)
+	    // Tambien eliminar de la pila
 	    eliminarDeLista(pila_alumnos_inactivos, eliminado->matricula);
-	
+        //almacenar matricula para mostrarla
+        int matricula = eliminado->matricula;
+
 	    // Liberar memoria
 	    delete eliminado;
 	
-	    cout << "Baja total completada. Alumno eliminado permanentemente.\n";
+	    cout << "Baja total completada. Alumno con matricula " << matricula <<" eliminado permanentemente.\n";
 	    
 	    
 	    //**Eliminar las siguientes 3 lineas para no mostrar listas**
@@ -479,7 +485,7 @@ void altaAlumnos(Lista &lista_activos) {
     Alumno* temp = lista_activos;
     while (temp != NULL) {
         if (temp->matricula == nuevo->matricula) {
-            cout << "Error: La matri­cula ya existe.\n";
+            cout << "Error: La matricula ya existe.\n";
             delete nuevo;
             cout << "Regresando al menu principal...\n";
             system("pause");
@@ -742,6 +748,7 @@ void recuperarAlumno(Lista &lista_alumnos_activos, Lista &lista_alumnos_inactivo
 }
 
 void modificarDatos(Lista &lista_alumnos_activos) {
+    system("cls");
     cout << "\n--- Modificar datos de alumno activo ---\n";
 
     	    //**Eliminar las siguientes 6 lineas para no mostrar listas**
