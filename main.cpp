@@ -382,6 +382,13 @@ void deshacerBaja(Lista &lista_alumnos_activos, Lista &lista_alumnos_inactivos, 
 //No hay manera de despues darlo de baja aqui poder recuperarlo
 void bajaTotal(Lista &lista_alumnos_inactivos, Pila &pila_alumnos_inactivos) {
     cout << "\n--- Baja Total ---\n";
+    if (lista_alumnos_inactivos == NULL) {
+        cout << "No hay alumnos inactivos.\n";
+        system("pause");
+        return;
+    }
+
+    
     
     cout << "\n***Lista de alumnos inactivos***"<< endl;
 	mostrar(lista_alumnos_inactivos);
@@ -433,10 +440,6 @@ void bajaTotal(Lista &lista_alumnos_inactivos, Pila &pila_alumnos_inactivos) {
 	    //**Eliminar las siguientes 3 lineas para no mostrar listas**
 	    cout << "\n***Lista de alumnos inactivos***"<< endl;
 	    mostrar(lista_alumnos_inactivos);
-		cout << "\n-------------------------------";
-		cout << "\n-------------------------------\n";
-		cout << "\n***Pila de alumnos inactivos***"<< endl;
-	    mostrar(pila_alumnos_inactivos);
 		cout << "\n-------------------------------";
 		cout << "\n-------------------------------\n";
 	    system("pause");
@@ -714,7 +717,13 @@ Alumno* nodo_medio(Lista cabeza, Lista fin){
 
 //Se utiliza la funcion de recuperar alumno para eliminar el nodo de la pila y lista de inactivos y pasarla nuevamente a la lista de activos
 void recuperarAlumno(Lista &lista_alumnos_activos, Lista &lista_alumnos_inactivos, Pila &pila_alumnos_inactivos){
+    system("cls");
     cout << "\n--- Recuperar alumno ---\n";
+        if (pila_alumnos_inactivos == NULL) {
+        cout << "No hay alumnos inactivos.\n";
+        system("pause");
+        return;
+    }
 	
 	//**Eliminar las siguientes 7 lineas para no mostrar listas**
 	cout << "\n***Lista de alumnos inactivos***"<< endl;
