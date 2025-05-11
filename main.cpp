@@ -101,6 +101,9 @@ void mostrarAprobados(Lista &lista_alumnos_activos);
 Alumno* nodo_medio(Lista cabeza, Lista fin);
 int total_activos = 0;
 
+// Inciso 5 - Modificar datos
+void modificarDatos(Lista &lista_alumnos_activos);
+
 int main(){
 	int op;
 	Lista lista_alumnos_activos = NULL;
@@ -116,7 +119,7 @@ int main(){
             case 2: submenu_bajas(lista_alumnos_activos, lista_alumnos_inactivos, pila_alumnos_inactivos); break;
             case 3: recuperarAlumno(lista_alumnos_activos, lista_alumnos_inactivos, pila_alumnos_inactivos); break;
             case 4: submenuReportes(lista_alumnos_activos, lista_alumnos_inactivos); break;
-            case 5: break;
+            case 5: modificarDatos(lista_alumnos_activos); break;
             case 6: break;
             case 7: break;
             case 8: 
@@ -681,4 +684,104 @@ void recuperarAlumno(Lista &lista_alumnos_activos, Lista &lista_alumnos_inactivo
 	    }
 	    system("pause");
 	}
+}
+
+void modificarDatos(Lista &lista_alumnos_activos) {
+    cout << "\n--- Modificar datos de alumno activo ---\n";
+
+    	    //**Eliminar las siguientes 6 lineas para no mostrar listas**
+        	cout << "\n***Lista de alumnos activos***"<< endl;
+            mostrar(lista_alumnos_activos);
+			cout << "\n-------------------------------";
+			cout << "\n-------------------------------\n";
+
+    int opcionBusqueda;
+    cout << "Buscar por:\n1. Matricula\n2. Nombre\nOpcion: ";
+    opcionBusqueda = leerValor<int>(1, 2);
+
+    Alumno* encontrado = NULL;
+    if(opcionBusqueda == 1){
+        int mat;
+        cout << "Ingrese matricula: ";
+        mat = leerValor<int>(0, 9999999);
+        encontrado = buscarPorMatricula(lista_alumnos_activos, mat, NULL);
+    } else {
+        string nombre;
+        cout << "Ingrese nombre: ";
+        cin.ignore();
+        nombre = leerCadena();
+        encontrado = buscarPorNombre(lista_alumnos_activos, nombre);
+    }
+
+    if (encontrado == NULL) {
+        cout << "Alumno no encontrado.\n";
+        system("pause");
+        return;
+    }
+
+    int opcionCampo;
+    cout << "\nModificar:\n1. Matricula\n2. Nombre\n3. Edad\n4. Promedio general\n5. Direccion\n6. Telefono\nOpcion: ";
+    opcionCampo = leerValor<int>(1, 6);
+
+    switch (opcionCampo) {
+        case 1: { // Matricula
+            cout << "Nueva matricula: ";
+            int nuevaMat = leerValor<int>(0, 99999999);
+
+            // Validar que no exista
+            Alumno* temp = lista_alumnos_activos;
+            while (temp != NULL) {
+                if (temp != encontrado && temp->matricula == nuevaMat) {
+                    cout << "Error: La matricula ya existe.\n";
+                    system("pause");
+                    return;
+                }
+                temp = temp->next;
+            }
+
+            // Eliminar y reinsertar para mantener orden
+            Alumno* modificado = eliminarDeLista(lista_alumnos_activos, encontrado->matricula);
+            modificado->matricula = nuevaMat;
+            insertarOrdenado(lista_alumnos_activos, modificado);
+
+            cout << "Matricula modificada exitosamente.\n";
+            break;
+        }
+        case 2: { // Nombre
+            cin.ignore();
+            cout << "Nuevo nombre: ";
+            encontrado->nombre = leerCadena();
+            break;
+        }
+        case 3: { // Edad
+            cout << "Nueva edad: ";
+            encontrado->edad = leerValor<int>(1, 100);
+            break;
+        }
+        case 4: { // Promedio
+            cout << "Nuevo promedio: ";
+            encontrado->promedio = leerValor<float>(0, 100.0);
+            break;
+        }
+        case 5: { // Direccion
+            cin.ignore();
+            cout << "Nueva direccion: ";
+            encontrado->direccion = leerCadena();
+            break;
+        }
+        case 6: { // Telefono
+            cout << "Nuevo telefono: ";
+            encontrado->telefono = leerValor<long long>(1000000000, 9999999999);
+            break;
+        }
+    }
+
+     	    //**Eliminar las siguientes 6 lineas para no mostrar listas**
+        	cout << "\n***Lista de alumnos activos***"<< endl;
+            mostrar(lista_alumnos_activos);
+			cout << "\n-------------------------------";
+			cout << "\n-------------------------------\n";   
+
+    cout << "Datos modificados correctamente.\n";
+    system("pause");
 }
