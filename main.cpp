@@ -74,6 +74,7 @@ Alumno* buscarPorNombre(Lista cabeza, const string& nombre);
 void insertarOrdenado(Lista &cabeza, Alumno* nuevo);
 void eliminar_lista(Lista &lista);
 void mostrar(const Lista lista);
+void mostrarAlumno(Alumno* alumno);
 
 // Menu
 int mostrarMenu();
@@ -163,13 +164,48 @@ Alumno* buscarPorMatricula(Alumno* cabeza, int matricula, Alumno* fin) {
 
     return buscarPorMatricula(medio->next, matricula, fin);
 }
+
 Alumno* buscarPorNombre(Lista cabeza, const string& nombre) {
     Alumno* actual = cabeza;
+    Alumno* encontrado = NULL;// este solo va a funcionar cuando hay un solo alumno con ese nombre
+    int cont=0;
+    int mat=0;
     while (actual != NULL) {
-        if (actual->nombre == nombre)
-            return actual;
+        if(actual->nombre == nombre) {
+            encontrado = actual;
+            mostrarAlumno(actual);
+            cont++;
+        }
         actual = actual->next;
     }
+
+    if (cont > 1)//quiere decir que hubo mas de un alumno con el mismo nombre
+    {
+        cout<< "Se encontraron " << cont << " alumnos con el mismo nombre." << endl;
+        cout << "Por favor, busque por matricula." << endl;
+        cout << "Ingrese la matricula del alumno: ";
+        mat = leerValor<int>(0,99999999);
+        actual = buscarPorMatricula(cabeza, mat, NULL);
+        system("cls");
+        if (actual == NULL)
+        {
+            return NULL;
+        }
+        else
+        {
+            cout << "Se encontro el alumno con la matricula " << mat << endl;
+            return actual;
+        }   
+    }else if (cont ==1){//solo hay un alumno con ese nombre
+        system("cls");
+        cout << "Se encontro el alumno con el nombre " << nombre << endl;
+        return encontrado;
+    }else{
+        system("cls");
+        cout << "No se encontro el alumno con el nombre " << nombre << endl;
+        return NULL;
+    }
+    
     return NULL;
 }
 
@@ -193,6 +229,23 @@ Lista eliminarDeLista(Lista &cabeza, int matricula) {
     actual->next = NULL;
     return actual;
 }
+
+void mostrarAlumno(Alumno* alumno) {
+    cout << "\n-----------------------------------\n";
+    if(alumno == NULL){
+        cout << "Error al mostrar alumno" << endl;
+    }
+
+    cout << "Matricula: " << alumno->matricula << endl
+        << "Nombres: " << alumno->nombre << endl
+        << "Edad: " << alumno->edad << endl
+        << "Promedio: " << alumno->promedio << endl
+        << "Direccion: " << alumno->direccion << endl
+        << "Telefono: " << alumno->telefono << endl
+        << "Situacion: " << (alumno->situacion == 1 ? "**Activo**" : "**Inactivo**") << endl;
+    cout << endl;
+}
+
 void bajaParcial(Lista &lista_alumnos_activos, Lista &lista_alumnos_inactivos, Pila &pila_alumnos_inactivos) { 
 	cout << "\n--- Baja Parcial ---\n";
 	
@@ -203,7 +256,7 @@ void bajaParcial(Lista &lista_alumnos_activos, Lista &lista_alumnos_inactivos, P
 	cout << "\n-------------------------------\n";
 	
 	int opcion;
-    cout << "Buscar por:\n1. Matracula\n2. Nombre\nOpcion: ";
+    cout << "Buscar por:\n1. Matricula\n2. Nombre\nOpcion: ";
     opcion = leerValor<int>(1,2);
 
     
@@ -398,7 +451,7 @@ int submenu_bajas(Lista &lista_alumnos_activos, Lista &lista_alumnos_inactivos, 
     	cout << "2. Deshacer ultima baja\n";
     	cout << "3. Baja total\n";
     	cout << "4. Salir\n";
-    	cout << "Seleccione una opciÃ³n: ";
+    	cout << "Seleccione una opcion: ";
 		opcion = leerValor<int>(1,4);
 		cout << opcion << " <-";
 		system("cls");	
@@ -413,7 +466,7 @@ int submenu_bajas(Lista &lista_alumnos_activos, Lista &lista_alumnos_inactivos, 
 	return opcion;
 }
 
-//**Me tome la libertad de hacerlo**
+
 void altaAlumnos(Lista &lista_activos) {
 	system("cls");	
     Alumno* nuevo = new Alumno;
@@ -422,12 +475,14 @@ void altaAlumnos(Lista &lista_activos) {
     cout << "Matricula: ";
     nuevo->matricula = leerValor<int>(0,99999999);
 
-    // Validar si la matrÃ­cula ya existe
+    // Validar si la matri­cula ya existe
     Alumno* temp = lista_activos;
     while (temp != NULL) {
         if (temp->matricula == nuevo->matricula) {
-            cout << "Error: La matrÃ­cula ya existe.\n";
+            cout << "Error: La matri­cula ya existe.\n";
             delete nuevo;
+            cout << "Regresando al menu principal...\n";
+            system("pause");
             return;
         }
         temp = temp->next;
@@ -488,7 +543,7 @@ void submenuReportes(Lista &lista_alumnos_activos, Lista &lista_alumnos_inactivo
     	cout << "3. Datos generales" << endl;
     	cout << "4. Alumnos inactivos" << endl;
         cout << "5. Salir " << endl;
-    	cout << "Seleccione una opciÃ³n: ";
+    	cout << "Seleccione una opcion: ";
 		opcion = leerValor<int>(1,5);
 		cout << opcion << " <-";
 		system("cls");	
@@ -555,7 +610,7 @@ void mostrarDatos(Lista &lista_alumnos_activos) {
     	cout << "1. Buscar por matricula" << endl;
     	cout << "2. Buscar por nombre" << endl;
         cout << "3. Salir" << endl;
-    	cout << "Seleccione una opciÃ³n: ";
+    	cout << "Seleccione una opcion: ";
 		opcion = leerValor<int>(1,3);
 		cout << opcion << " <-";
 		system("cls");	
