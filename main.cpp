@@ -66,7 +66,7 @@ struct Cola{
 	Alumno* last = NULL;
 };
 
-//Declaracion de las funciones
+// DECLARACION DE LAS FUNCIONES
 
 // Funciones de ordenamiento y busqueda / manejo de estructuras
 Lista buscarPorMatricula(Alumno* cabeza, int matricula, Alumno* fin);
@@ -90,6 +90,9 @@ void bajaParcial(Lista &lista_alumnos_activos, Lista &lista_alumnos_inactivos, P
 void deshacerBaja(Lista &lista_alumnos_activos, Lista &lista_alumnos_inactivos, Pila &pila_alumnos_inactivos);
 void bajaTotal(Lista &lista_alumnos_inactivos, Pila &pila_alumnos_inactivos);
 
+// Inciso 3 - Recuperar alumno
+void recuperarAlumno(Lista &lista_alumnos_activos, Lista &lista_alumnos_inactivos, Pila &pila_alumnos_inactivos);
+
 // Inciso 4 - Reportes
 void submenuReportes(Lista &lista_alumnos_activos, Lista &lista_alumnos_inactivos);
 void mostrarPorcentajes(Lista &lista_alumnos_activos);
@@ -111,7 +114,7 @@ int main(){
         switch (op) {
             case 1: altaAlumnos(lista_alumnos_activos); break;
             case 2: submenu_bajas(lista_alumnos_activos, lista_alumnos_inactivos, pila_alumnos_inactivos); break;
-            case 3: break;
+            case 3: recuperarAlumno(lista_alumnos_activos, lista_alumnos_inactivos, pila_alumnos_inactivos); break;
             case 4: submenuReportes(lista_alumnos_activos, lista_alumnos_inactivos); break;
             case 5: break;
             case 6: break;
@@ -205,7 +208,6 @@ void bajaParcial(Lista &lista_alumnos_activos, Lista &lista_alumnos_inactivos, P
     Alumno* encontrado = NULL;
     if (opcion == 1) {
         int mat;
-        cout << "Ingrese matricula: ";
         cout << "Ingrese matricula: ";
         mat = leerValor<int>(0,9999999);
         encontrado = buscarPorMatricula(lista_alumnos_activos, mat, NULL);
@@ -613,4 +615,70 @@ Alumno* nodo_medio(Lista cabeza, Lista fin){
     }
 
     return lento;
+}
+
+void recuperarAlumno(Lista &lista_alumnos_activos, Lista &lista_alumnos_inactivos, Pila &pila_alumnos_inactivos){
+    cout << "\n--- Recuperar alumno ---\n";
+	
+	//**Eliminar las siguientes 7 lineas para no mostrar listas**
+	cout << "\n***Lista de alumnos inactivos***"<< endl;
+	mostrar(lista_alumnos_inactivos);
+	cout << "\n-------------------------------";
+	cout << "\n-------------------------------\n";
+    cout << "\n***Pila de alumnos inactivos***"<< endl;
+    mostrar(pila_alumnos_inactivos);
+	cout << "\n-------------------------------";
+	cout << "\n-------------------------------\n";
+
+    int opcion;
+    cout << "Buscar por:\n1. Matricula\n2. Nombre\nOpcion: ";
+    opcion = leerValor<int>(1,2);
+
+    Alumno* encontrado = NULL;
+    if(opcion == 1){
+        int mat;
+        cout << "Ingrese matricula: ";
+        mat = leerValor<int>(0,9999999);
+        encontrado = buscarPorMatricula(lista_alumnos_inactivos, mat, NULL);
+    } 
+	else {
+        string nombre;
+        cout << "Ingrese nombre: ";
+        cin.ignore();
+        nombre = leerCadena();
+        encontrado = buscarPorNombre(lista_alumnos_inactivos, nombre);
+	}
+
+    if (encontrado == NULL) {
+        cout << "Alumno no encontrado.\n";
+        system("pause");
+    }
+	else{
+		// Eliminarlo de la lista de inactivos
+		Alumno* alta = eliminarDeLista(lista_alumnos_inactivos, encontrado->matricula);
+    	if (alta != NULL){
+        	alta->situacion = true;
+	
+    	    // Insertar ordenadamente en la lista de activos
+        	insertarOrdenado(lista_alumnos_activos, alta);
+	
+    	    // Retirar de la pila de bajas 
+			eliminarDeLista(pila_alumnos_inactivos, encontrado->matricula);
+	
+    	    cout << "Alumno reactivado con exito.\n";
+    	    
+    	    //**Eliminar las siguientes 6 lineas para no mostrar listas**
+        	cout << "\n***Lista de alumnos activos***"<< endl;
+            mostrar(lista_alumnos_activos);
+			cout << "\n-------------------------------";
+			cout << "\n-------------------------------\n";
+        	cout << "\n***Pila de alumnos inactivos***"<< endl;
+        	mostrar(pila_alumnos_inactivos);
+			cout << "\n-------------------------------";
+			cout << "\n-------------------------------\n";
+    	} else {
+	        cout << "Error al procesar alta.\n";
+	    }
+	    system("pause");
+	}
 }
