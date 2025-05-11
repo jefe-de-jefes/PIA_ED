@@ -539,6 +539,8 @@ void altaAlumnos(Lista &lista_activos) {
     insertarOrdenado(lista_activos, nuevo);
     total_activos++;
     cout << "Alumno agregado exitosamente.\n";
+
+    cout << "\n******Lista de alumnos activos.******\n";
     mostrar(lista_activos);
 	cout << "\n-------------------------------";
 	cout << "\n-------------------------------\n";
