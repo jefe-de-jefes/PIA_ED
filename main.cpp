@@ -71,7 +71,6 @@ struct Alumno {
     long long telefono;
     bool situacion; // true = activo, false = baja
     Alumno* next;
-    Alumno* anterior;
 };
 
 typedef Alumno* Lista;
@@ -87,7 +86,6 @@ struct Cola{
 Lista buscarPorMatricula(Alumno* cabeza, int matricula, Alumno* fin);
 Alumno* buscarPorNombre(Lista cabeza, const string& nombre);
 void insertarOrdenado(Lista &cabeza, Alumno* nuevo);
-void eliminar_lista(Lista &lista);
 void mostrar(const Lista lista);
 void mostrarAlumno(Alumno* alumno);
 int totalAlumnos(Lista lista_alumnos_activos);
@@ -121,8 +119,16 @@ int total_activos = 0;
 // Inciso 5 - Modificar datos
 void modificarDatos(Lista &lista_alumnos_activos);
 
-//inciso 8 - Crear grupos
+// Inciso 6 - Control de inscripciones
+void agregarColaOrdenada(Cola& cola, const Alumno* alumno_lista);
+void crearCola(Cola &cola_alumnos_activos, Lista lista_alumnos_activos);
+Alumno* desencolar(Cola& cola);
+
+//inciso 7 - Crear grupos
 void crearGrupos(Lista alumnos_activos);
+
+// Inciso 8 - Salir
+void eliminar_lista(Lista &lista);
 
 int main(){
 	int op;
@@ -140,7 +146,7 @@ int main(){
             case 3: recuperarAlumno(lista_alumnos_activos, lista_alumnos_inactivos, pila_alumnos_inactivos); break;
             case 4: submenuReportes(lista_alumnos_activos, lista_alumnos_inactivos); break;
             case 5: modificarDatos(lista_alumnos_activos); break;
-            case 6: break;
+            case 6: crearCola(cola_alumnos_activos, lista_alumnos_activos);break;
             case 7: crearGrupos(lista_alumnos_activos);break;
             case 8: 
             	cout << "\nSaliendo....";
@@ -887,6 +893,120 @@ void modificarDatos(Lista &lista_alumnos_activos) {
     system("pause");
 }
 
+
+void agregarColaOrdenada(Cola& cola, const Alumno* alumno_lista) {
+    // Creamos una copia del alumno para evitar modificar la lista original
+    Alumno* nuevo_alumno = new Alumno();
+    nuevo_alumno->matricula = alumno_lista->matricula;
+    nuevo_alumno->nombre = alumno_lista->nombre;
+    nuevo_alumno->promedio = alumno_lista->promedio;
+    nuevo_alumno->direccion = alumno_lista->direccion;
+    nuevo_alumno->edad = alumno_lista->edad;
+    nuevo_alumno->situacion = alumno_lista->situacion;
+    nuevo_alumno->telefono = alumno_lista->telefono;
+    nuevo_alumno->next = NULL;
+
+    // Si la cola está vacía, el primer y último alumno son el mismo
+    if (cola.first == NULL) {
+        cola.first = nuevo_alumno;
+        cola.last = nuevo_alumno;
+        return;
+    }
+
+    Alumno* aux_cola = cola.first;
+    Alumno* prev = NULL;
+
+    // Recorrer la cola hasta encontrar el lugar correcto para insertar
+    while (aux_cola != NULL && (aux_cola->promedio > nuevo_alumno->promedio || 
+          (aux_cola->promedio == nuevo_alumno->promedio && aux_cola->nombre < nuevo_alumno->nombre))) {
+        prev = aux_cola;
+        aux_cola = aux_cola->next;
+    }
+
+    // Si el nuevo alumno va al principio
+    if (prev == NULL) {
+        nuevo_alumno->next = cola.first;
+        cola.first = nuevo_alumno;
+    } else {
+        // Si no, lo insertamos después de 'prev'
+        prev->next = nuevo_alumno;
+        nuevo_alumno->next = aux_cola;
+    }
+
+    // Si el nuevo alumno es el último, actualizamos la referencia 'last'
+    if (aux_cola == NULL) {
+        cola.last = nuevo_alumno;
+    }
+}
+
+// Función para crear la cola ordenada a partir de la lista de alumnos
+void crearCola(Cola &cola_alumnos_activos, Lista lista_alumnos_activos) {
+    system("cls");
+    cout << "\n--- Crear cola ---\n";
+    
+    if (lista_alumnos_activos == nullptr) {
+        cout << "No hay alumnos disponibles para crear cola." << endl;
+        system("pause");
+        return;
+    }
+
+    Alumno* aux_lista = lista_alumnos_activos;
+
+    // Recorremos la lista de alumnos y los vamos agregando a la cola ordenada
+    while (aux_lista != NULL) {
+        // Agregamos el alumno a la cola en su lugar adecuado
+        agregarColaOrdenada(cola_alumnos_activos, aux_lista);
+        aux_lista = aux_lista->next;  // Avanzamos al siguiente alumno en la lista
+    }
+
+    // Imprimir la cola para verificar que está ordenada
+    Alumno* aux_cola = cola_alumnos_activos.first;
+    cout << "\nCola ordenada:\n";
+    while (aux_cola != NULL) {
+        cout << aux_cola->nombre << " con promedio: " << aux_cola->promedio << endl;
+        aux_cola = aux_cola->next;
+    }
+    cout << "Cola creada exitosamente.\n";
+    system("pause");
+    system("cls");
+
+    do
+    {
+        cout << "\nPara desencolar un alumno haga click en cualquier tecla\n\n";
+        system("pause");
+        Alumno* desencolado = desencolar(cola_alumnos_activos);
+        if (desencolado != NULL) {
+            system("cls");
+            cout << "Alumno desencolado: ";
+            mostrarAlumno(desencolado);
+            delete desencolado;
+        } else {
+            system("cls");
+            cout << "\n--- Cola vacia ---\n";
+            cout << "Todos los alumnos han sido desencolados. Exito en tu semestre!!!!." << endl;
+            system("pause");
+            break;
+        }
+    } while(1);
+}
+
+Alumno* desencolar(Cola& cola) {
+    if (cola.first == NULL) {
+        return NULL;
+    }
+
+    // Guardamos el primer alumno de la cola y movemos la referencia al siguiente
+    Alumno* desencolado = cola.first;
+    cola.first = cola.first->next;
+
+    if (cola.first == NULL) {
+        cola.last = NULL;  // Si la cola queda vacía, actualizamos 'last'
+    }
+
+    // Si no deseas borrar el alumno, simplemente no usamos 'delete'
+    return desencolado;
+}
+
 //Contabiliza el total de alumnos en la lista de activos
 int totalAlumnos(Lista lista_alumnos_activos){
     if (lista_alumnos_activos == NULL)  // Si la lista está vacía
@@ -909,6 +1029,7 @@ void crearGrupos(Lista alumnos_activos){
     system("cls");
     if (alumnos_activos == NULL) {
         cout << "No hay alumnos disponibles para crear grupos." << endl;
+        system("pause");
         return;
     }
     Alumno* aux = alumnos_activos;
