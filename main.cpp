@@ -88,6 +88,7 @@ Alumno* buscarPorNombre(Lista cabeza, const string& nombre);
 void insertarOrdenado(Lista &cabeza, Alumno* nuevo);
 void mostrar(const Lista lista);
 void mostrarAlumno(Alumno* alumno);
+Lista eliminarDeLista(Lista &cabeza, int matricula);
 int totalAlumnos(Lista lista_alumnos_activos);
 
 // Menu
@@ -98,7 +99,6 @@ int mostrarMenu();
 // Inciso 1 - Alta de estudiantes
 void altaAlumnos(Lista &lista_activos);
 
-Lista eliminarDeLista(Lista &cabeza, int matricula);
 // Inciso 2 - Baja de estudiantes
 int submenu_bajas(Lista &lista_alumnos_activos, Lista &lista_alumnos_inactivos, Pila &pila_alumnos_inactivos);
 void bajaParcial(Lista &lista_alumnos_activos, Lista &lista_alumnos_inactivos, Pila &pila_alumnos_inactivos);
@@ -124,7 +124,7 @@ void agregarColaOrdenada(Cola& cola, const Alumno* alumno_lista);
 void crearCola(Cola &cola_alumnos_activos, Lista lista_alumnos_activos);
 Alumno* desencolar(Cola& cola);
 
-//inciso 7 - Crear grupos
+// Inciso 7 - Crear grupos
 void crearGrupos(Lista alumnos_activos);
 
 // Inciso 8 - Salir
